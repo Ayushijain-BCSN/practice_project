@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
 
-const MONGODB_URI = 'mongodb+srv://ayushijain0807_db_user:CzSZGkTzmcHWBfLa@cluster0.tncoxks.mongodb.net/?appName=Cluster0';
+dotenv.config();
+
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const AdminSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
