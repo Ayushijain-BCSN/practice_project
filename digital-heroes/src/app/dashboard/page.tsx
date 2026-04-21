@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import styles from './page.module.css';
 
-export default function Dashboard() {
+function DashboardContent() {
   const [scores, setScores] = useState<any[]>([]);
   const [newScore, setNewScore] = useState('');
   const [newDate, setNewDate] = useState('');
@@ -400,5 +400,13 @@ export default function Dashboard() {
         </div>
       )}
     </>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>Loading Dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
