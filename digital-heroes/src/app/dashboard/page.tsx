@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import styles from './page.module.css';
 
@@ -24,6 +25,9 @@ export default function Dashboard() {
 
   // Winnings state
   const [winnings, setWinnings] = useState<any[]>([]);
+
+  const searchParams = useSearchParams();
+  const wasCanceled = searchParams.get('canceled') === 'true';
 
   useEffect(() => {
     fetchProfile();
@@ -179,6 +183,18 @@ export default function Dashboard() {
     input.click();
   };
 
+  // Loading state — prevents full dashboard flash before subscription is confirmed
+  if (subscriptionActive === null) {
+    return (
+      <>
+        <Navbar />
+        <div className={`container ${styles.dashboardLayout}`} style={{ textAlign: 'center', paddingTop: '120px' }}>
+          <div style={{ fontSize: '18px', color: '#64748b' }}>⏳ Loading your dashboard...</div>
+        </div>
+      </>
+    );
+  }
+
   // Subscription guard overlay
   if (subscriptionActive === false) {
     return (
@@ -188,6 +204,19 @@ export default function Dashboard() {
           <div className={styles.dashboardHeader}>
             <h2>Player Dashboard</h2>
           </div>
+          {wasCanceled && (
+            <div style={{
+              padding: '16px',
+              marginBottom: '24px',
+              borderRadius: '10px',
+              background: 'rgba(251, 191, 36, 0.1)',
+              border: '1px solid rgba(251, 191, 36, 0.3)',
+              color: '#fbbf24',
+              fontSize: '14px'
+            }}>
+              ⚠️ Subscription checkout was cancelled. You can subscribe anytime below.
+            </div>
+          )}
           <div className={styles.card} style={{ textAlign: 'center', padding: '60px 32px' }}>
             <h3 style={{ fontSize: '28px', marginBottom: '16px' }}>🔒 Subscription Required</h3>
             <p style={{ color: '#94a3b8', marginBottom: '32px', maxWidth: '500px', margin: '0 auto 32px' }}>
